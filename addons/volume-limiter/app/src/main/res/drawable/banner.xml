@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 16:9 banner: speaker cone with an audio limiter cap in emerald green. Own art. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp" android:height="180dp"
+    android:viewportWidth="320" android:viewportHeight="180">
+    <path android:fillColor="#101418" android:pathData="M0,0h320v180h-320z" />
+    <path android:fillColor="#1A222C" android:pathData="M20,20h280v140h-280z" />
+    <!-- Speaker Body -->
+    <path android:fillColor="#34C759" android:pathData="M110,72h20l24,-20v76l-24,-20h-20z" />
+    <!-- Sound Waves -->
+    <path android:strokeColor="#34C759" android:strokeWidth="5" android:strokeLineCap="round" android:fillColor="#00000000"
+        android:pathData="M168,74a24,24 0 0 1 0,32" />
+    <path android:strokeColor="#5EE287" android:strokeWidth="5" android:strokeLineCap="round" android:fillColor="#00000000"
+        android:pathData="M180,62a42,42 0 0 1 0,56" />
+    <!-- Limiter Cap Barrier -->
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="4" android:strokeLineCap="round" android:fillColor="#00000000"
+        android:pathData="M204,56v68" />
+</vector>

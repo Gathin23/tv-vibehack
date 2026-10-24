@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Volume Limiter</string>
+    <string name="notification_channel">Volume Guard</string>
+    <string name="notification_text">Volume limiter is active</string>
+    <string name="hint_nav">◀ ▶ adjust limit    OK select / toggle    Back closes</string>
+</resources>
