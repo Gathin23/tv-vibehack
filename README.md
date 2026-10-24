@@ -436,6 +436,7 @@ tools/restore.sh examples/xiaomi-mi-tv-4a/debloat.txt        # undo it, stock la
 tools/venv/bin/python -I tools/check.py examples/xiaomi-mi-tv-4a/debloat.txt   # what a firmware update undid
 TV_HOST=192.168.1.50 launcher/build-and-install.sh           # build the launcher and make it Home
 tools/theme.sh themes/aurora                                 # push a theme; --reset removes it
+python3 tools/wallpaper_prep.py ~/Pictures/trip mytheme/wallpapers   # your photos, sized and darkened for the TV
 ```
 
 | Tool | What it does |
@@ -449,6 +450,7 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 | [`tools/adb-closed.py`](tools/adb-closed.py) | Checks that the TV's network ADB port is closed once debugging is off: exits 0 when nothing answers, 1 while it is still open, 2 when the check itself could not run. No `nc` needed. |
 | [`tools/privacy.py`](tools/privacy.py) | Audits the TV for voice, ACR and telemetry candidates and prints the evidence for each; `--write` turns the findings into a list `disable.sh` and `restore.sh` already understand. |
 | [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
+| [`tools/wallpaper_prep.py`](tools/wallpaper_prep.py) | Turns a folder of your own photos (JPEG, PNG, WebP, HEIC) into darkened 1280×720 JPEGs under 300 KB for a theme's `wallpapers/` folder. Needs Pillow, plus pillow-heif for HEIC (`tools/requirements-photos.txt`). Never touches the originals. [How to use it](#your-own-photos-as-the-background). |
 | [`tools/manage.py`](tools/manage.py) | List every add-on, theme and switch with its screenshot, see what is on the TV, and install, update or remove one by running its creator's own script. |
 | [`tools/bench.py`](tools/bench.py) | Measures the launcher that answers HOME: key latency, how far the focus moved, janky frames, cold start, return to Home, and the idle CPU and PSS it costs. Changes nothing on the TV and writes the raw per-key numbers to JSON; no extra install. |
 | [`tools/trace.py`](tools/trace.py), [`trace_report.py`](tools/trace_report.py) | Records Perfetto traces of the launcher (return to Home, cold start, D-pad) and reports where its time goes, per run and before against after. Optional: needs [`requirements-perf.txt`](tools/requirements-perf.txt). [Guide](tools/trace.md). |
@@ -661,6 +663,59 @@ Up and Down move one row. The top buttons never fall through to tiles, and Down 
 dock tile you came from. The last focused app is remembered, and installing or removing an app refreshes
 the tiles while Home is open. App banners load at xhdpi or better, so low-density TV UIs do not downsample
 them before the focus zoom.
+
+</details>
+
+<a id="your-own-photos-as-the-background"></a>
+<details>
+<summary><b>Your own photos as the background</b></summary>
+
+A theme can rotate a folder of pictures behind Home, with no rebuild. No pictures ship with the repo: you bring
+your own, and you decide you have the right to show them.
+
+1. **Start a theme folder.** Copy a theme you like from [`themes/`](themes/), for example
+   `themes/aurora`, into a new folder such as `mytheme/`, or start with an empty `config.json`.
+2. **Prepare the photos.** A bright 12 MP photo is heavy for a 1 to 2 GB TV and drowns the clock and tiles.
+   `tools/wallpaper_prep.py` centre-crops to 16:9, saves 1280×720 JPEGs under 300 KB, and darkens the picture
+   itself, so `wallpaper_dim` can stay at 0. HEIC phone photos work. Your originals are never touched.
+
+   ```bash
+   python3 -m pip install -r tools/requirements-photos.txt
+   python3 tools/wallpaper_prep.py ~/Pictures/trip mytheme/wallpapers
+   ```
+
+   Options: `--brightness 0.25` (0.1 to 1.0), `--gradient 0.6` (extra black toward the dock), `--size 1280x720`,
+   `--max-kb 300`.
+3. **Set the rotation** in `mytheme/config.json`:
+
+   ```json
+   { "wallpaper": true, "wallpaper_rotation_minutes": 1, "wallpaper_order": "shuffle", "wallpaper_dim": 0 }
+   ```
+
+   | Key | Notes |
+   |---|---|
+   | `wallpaper_rotation_minutes` | Whole minutes, 0 to 1440. **1 is the fastest.** `0` means no rotation, and a fraction such as `0.25` is read as `0`, which stops it. |
+   | `wallpaper_order` | `shuffle` never shows the same picture twice in a row; `sequential` follows the file names. |
+   | `wallpaper_dim` | Black overlay in percent. Leave at 0 when the pictures are already darkened. |
+   | `dock_glass`, `dock_opacity` | A frosted-glass dock band (30 to 100%) so the picture shows behind the tiles. |
+   | `greeting_name` | A name after the greeting: "Good evening, Sam". |
+   | `show_stats`, `app_library`, `reduced_motion` | A stats line under the clock, an App library pill, calmer motion for weak GPUs. |
+
+4. **Push it to the TV** (this restarts Home once, and keeps the Home-key helper working):
+
+   ```bash
+   tools/theme.sh mytheme            # Windows: tools\theme.ps1 -TvHost 192.168.1.50 mytheme
+   ```
+
+   On the TV, **Launcher settings → Wallpaper** holds one picture, **None**, or **Theme default**, which
+   rotates again.
+5. **Take it off** with `tools/theme.sh --reset`.
+
+What it cannot do: there is no crossfade (the picture changes with a cut), no rotation faster than a minute, and
+the Clock screensaver shows time and date only, never photos. Without a `wallpapers/` folder the theme still
+works and Home keeps its plain colour. A picture is decoded into memory while Home shows it: about 4 MB at 1080p
+in the default 16-bit colour, 8 MB with `wallpaper_true_color` (see [themes/README.md](themes/README.md)), so keep
+the pictures small on a 1 GB TV.
 
 </details>
 
