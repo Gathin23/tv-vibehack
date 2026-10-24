@@ -46,6 +46,18 @@
 # The three entries marked [43S5K ONLY] below were not disabled on the 32V5C. Comment them out before
 # applying this file to a 32V5C; they remain part of the tested 43S5K set.
 #
+# Brazilian unit (G13, G13_2K_GB, MediaTek MT9221, 954 MB, build UKN2.241110.001 AU07, security patch
+# 2025-06-01, locale pt-BR; the commercial model was not read): every active entry below was applied in four
+# batches on 2026-10-24, with a screenshot after each, and checked after a reboot. The two Brazilian partner
+# apps at the end were disabled too; they stay commented here because the Indian units do not ship them. Live
+# TV and HDMI are com.mediatek.wwtv.tvcenter here as well; no Ginga package is installed. The network in use belonged to android.uid.system, but an unused
+# network saved during setup belonged to setupwraith, so tools/disable.sh skipped setupwraith; it was
+# disabled with FORCE_SETUPWRAITH=1 after checking the owners, which deleted only the unused network. Home
+# on this unit is the CleanYourTV UI fork from SHOWCASE.md, not launcher/, and its install script disabled
+# launcherx. After the reboot: Home came back on it, Wi-Fi reconnected, and MemAvailable was 385 MB
+# (295 MB before the list). `input keyevent 83` did nothing once launcherx was off (simulated, not a press
+# on the remote).
+#
 # Known quirks on this firmware:
 # - The remote's gear button sends keycode 83 (KEYCODE_NOTIFICATION, scancode 561), which only launcherx
 #   handled: set settings_key_keycodes to [83] (config.xml or a theme) so it opens Settings again.
@@ -85,3 +97,8 @@ com.google.android.tungsten.setupwraith
 # (it was unset, so the default com.google.android.apps.tv.dreamx/.service.Backdrop ran;
 #  undo with 'settings delete secure screensaver_components')
 com.google.android.apps.tv.dreamx      # Google TV Ambient mode screensaver (promos)
+
+# Brazilian unit only: partner apps preloaded on the Brazilian firmware, disabled there by choice. The Indian
+# units do not ship them, so they stay commented; uncomment them on a Brazilian unit if nobody uses them.
+# br.com.claro.now.smarttvclient       # Claro TV+
+# com.mercadolibre.android.mplay_tv    # Mercado Play
