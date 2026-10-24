@@ -169,8 +169,84 @@ Video, Disney+, Peacock and gear buttons and lives with one step per press.
   survives. This is the only configuration that has both, and the price is the stock home screen the
   cleanup was replacing.
 
+- **Keep both with a listener of your own.** A script run by the `shell` user can answer the app
+  buttons without any service bound, so the ramp stays; see "Both at once" below. It needs network ADB left
+  on to start itself after a reboot, which is a real cost.
+
 It is a toggle, not a fix: two one-line `settings` writes switch between the two behaviours whenever
 you want, but never both at once.
+
+## Both at once: a listener on the TV, started at boot
+
+A unit with the same product, `G09_4K_GB`, and the same build, `STT2.230203.001.AS23` (Android 12, security
+patch 2025-09-05), and a Bluetooth remote that names itself `BT_RC813A_B4`, had the three app buttons and the
+volume ramp together, with no accessibility service bound. That does not contradict the bisect above: it is
+about services that filter keys, and this uses none. One owner, one unit, and the only checks were pressing
+the real Netflix, Prime Video and YouTube buttons, holding volume up and down, and rebooting once.
+
+**What reads the buttons.** With `enabled_accessibility_services` empty and `accessibility_enabled 0` (the
+control in the bisect), a script run by the `shell` user reads the remote's consumer-control input node with
+`getevent` and starts an app when one of three keys goes down. The keys are the scancodes in the table above,
+472, 473 and 569, which `getevent` prints as `0001 01d8`, `0001 01d9` and `0001 0239`. The node is found by
+name, not by `/dev/input/event<N>`, as the [TROUBLESHOOTING](../TROUBLESHOOTING.md) section on remapping the
+buttons without a key helper explains, along with the limit that a reader cannot consume a press. Here that
+costs nothing visible only because these vendor keycodes reach nothing else once launcherx is disabled
+(`KeyDownBehaviorReceiver` above); that is read from this note, not re-measured with the script. The script
+that ran, with its log lines dropped:
+
+```sh
+#!/system/bin/sh
+NAME='BT_RC813A_B4 Consumer Control'   # the node's name in `getevent -p`
+echo $$ > /data/local/tmp/keys.pid
+find_dev() { getevent -p 2>/dev/null | grep -B1 "name: .*\"$NAME\"" | head -1 | sed 's/.*: //'; }
+open_app() { am start -a android.intent.action.MAIN -c android.intent.category.LEANBACK_LAUNCHER -n "$1" >/dev/null 2>&1; }
+while true; do
+  DEV=$(find_dev)
+  if [ -z "$DEV" ]; then sleep 5; continue; fi
+  getevent "$DEV" 2>/dev/null | while read -r line; do
+    case "$line" in
+      *"0001 01d8 00000001"*) open_app com.netflix.ninja/.MainActivity ;;
+      *"0001 01d9 00000001"*) open_app com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity ;;
+      *"0001 0239 00000001"*) open_app com.google.android.youtube.tv/com.google.android.apps.youtube.tv.activity.ShellActivity ;;
+    esac
+  done
+  sleep 2
+done
+```
+
+It is started detached from the debugging session, or it dies with it:
+`setsid nohup sh /data/local/tmp/keys.sh > /dev/null 2>&1 < /dev/null &`. The loop waits for the remote when it
+is not connected and reads again when it comes back.
+
+**What starts it again after a reboot.** Nothing on the TV does by itself, which is the gap the
+[TROUBLESHOOTING](../TROUBLESHOOTING.md) section above leaves open. This unit closed it with a small app of the
+owner's own: on `BOOT_COMPLETED` it opens a TCP ADB connection to `127.0.0.1:5555` (the `dadb` library, a
+plain-Java ADB client), signs in with a key it generated for itself, checks the pid file and starts the script if
+it is not running. The first run shows the TV's "Allow USB debugging" prompt for that key once, answered with
+"Always allow". After a reboot started over ADB, the port was back and the listener was running about 30
+seconds later, with no computer involved. The app needs `RECEIVE_BOOT_COMPLETED` and `INTERNET` (for the
+loopback socket), and its install also ran `appops set <package> AUTO_START allow`, as the sleep-timer add-on
+does for TCL's boot manager; whether the receiver needs that was not tried without it. Its source is about 80
+lines and is not part of this change.
+
+**This needs network ADB on, permanently.** The listener comes back after a reboot only because `adbd` still
+listens on port 5555 and the app can reach it. That is the setting the closing step in
+[README](../../README.md) turns off, and the reason the maintainer asked for a reboot recipe
+built on it to be dropped from the section above, so read this as a trade, not a recommendation:
+
+- A connection needs a key the TV has accepted. A device that knows the TV's address and has no accepted key
+  gets no shell, so having port 5555 reachable is not the same as being open. It is not zero risk either: a
+  bug in `adbd` on a firmware that is behind on patches, or a prompt answered by mistake, or a copy of an
+  accepted private key (the app's own, or the computer's), each gives a shell on the TV to anything that can reach the port.
+- Never accept a debugging prompt that appears on the screen and that you did not start, and do not forward
+  port 5555 on the router.
+- To undo it all: uninstall the app, `kill $(cat /data/local/tmp/keys.pid)`, delete the script and the pid
+  file, then turn network debugging off and revoke the USB debugging authorisations in Developer options,
+  which is the README's closing step.
+
+Not covered: the Gear button (that stays with a helper, and so with the lost repeat), the buttons the system
+answers itself, a cold boot after power loss (the reboot was started over ADB), standby, a second remote, and
+whether any firmware other than this build lets the `shell` user read the remote's node.
 
 ## Limits
 
