@@ -62,6 +62,28 @@
 #   KEYCODE_TCL_YOUTUBE:com.google.android.youtube.tv, 4099:com.amazon.amazonvideo.livingroom.
 # tools/b64push.py worked here (md5 match). Screenshots of Live TV and HDMI are 0 bytes; Netflix's are black.
 #
+# Also tested 2026-10-20 to 10-24 on a fourth unit in Brazil, same software as the third (V8-R51AT01-LF1V126,
+# incremental AR07, patch 2024-12-05), Bluetooth remote "TCL_RC902V_MG" on event3; launcher as Home through
+# reboots and four days of use:
+# - Gear sent KEY_FORWARDMAIL (233) as keycode 4077 here too; settings_key_keycodes 4077 with HOME_KEY_SERVICE=1
+#   fixed it (enabled and bound for user 0, then pressed on the real remote). It was SystemUI's
+#   TOGGLE_NOTIFICATION_HANDLER_PANEL, which only launcherx answers.
+# - Wi-Fi: setupwraith owned one of the five saved networks (an old one, not the network in use) and Android
+#   deleted only that one when setupwraith was disabled. Check the creator of every saved network, not just the
+#   current one: `dumpsys wifi`, then the cname= of each.
+# - com.tcl.micmanager and com.google.android.apps.nbu.smartconnect.tv were disabled for four days with no effect
+#   noticed (voice was off by choice, so the mic was not used).
+# - With com.tcl.channelplus off, the "free channels" stay listed with no picture: the Input panel's
+#   "Pressione para Canais gratuitos" row and the TV app's channel list. `pm clear com.tcl.suspension` swaps
+#   the panel's channel row for recent apps. The TV app's list is fetched by com.tcl.tv itself (it runs as
+#   uid 1000) and is not kept in TvProvider, so nothing on the TV removes it short of DNS blocking; the owner
+#   re-enabled channelplus and the channels played at once (streams from amagi.tv).
+# - ttvs's update screen (Settings > System > About > Software update > Network update > System update) cannot
+#   be started over adb (needs com.tcl.permission.START_CHECK_SYSTEMUPDATE) and blocks screenshots. With ttvs
+#   enabled for the check, V8-R51AT01-LF1V126 was the latest version on 2026-10-20; ttvs was off otherwise.
+# - Used RAM 150 s after boot: 1294 MB stock, 1004 MB debloated, 1019 MB with the launcher (MemAvailable
+#   683 -> 662 -> 801 MB).
+#
 # DO NOT DISABLE: com.tcl.tv (Live TV, HDMI playback), com.tcl.tvinput (tuner, HDMI and AV inputs),
 # com.tcl.suspension (Quick Panel, also the Input key's source panel), com.tcl.keyhelp (remote virtual keys),
 # com.tcl.autopair, com.google.android.tv.remote.service, com.tcl.inputmethod.international (the keyboard),
@@ -82,7 +104,7 @@ com.google.android.onetimeinitializer
 
 # 2. Content and ad services
 com.tcl.waterfall.overseas                 # content "waterfall" recommendations
-com.tcl.channelplus                        # TCL Live FAST channels (a TV input)
+com.tcl.channelplus                        # TCL Live FAST channels (a TV input); without it they stay listed, unplayable
 com.tcl.dashboard                          # TCL Home panel, promos
 com.tcl.partnercustomizer                  # TCL tweaks to Google TV home rows
 com.tcl.messagebox                         # pushed messages and promos
