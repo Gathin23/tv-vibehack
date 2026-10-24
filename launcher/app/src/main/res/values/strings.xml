@@ -38,6 +38,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">Memory %1$d / %2$d MB</string>
     <string name="stats_storage">Storage %1$s free</string>
+    <string name="taskbar_title">System</string>
+    <string name="taskbar_memory">Memory (RAM)</string>
+    <string name="taskbar_cpu">CPU Usage</string>
+    <string name="taskbar_storage">Storage</string>
+    <string name="taskbar_open_settings">Running Apps / Settings</string>
     <string name="storage_gb_whole">%1$.0f GB</string>
     <string name="storage_gb_decimal">%1$.1f GB</string>
     <string name="dream_name">Clock</string>

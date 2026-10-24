@@ -54,6 +54,11 @@
     <string name="stats_storage">存储剩余 %1$s</string>
     <string name="storage_gb_whole">%1$.0f GB</string>
     <string name="storage_gb_decimal">%1$.1f GB</string>
+    <string name="taskbar_title">系统</string>
+    <string name="taskbar_memory">内存 (RAM)</string>
+    <string name="taskbar_cpu">CPU 使用率</string>
+    <string name="taskbar_storage">存储空间</string>
+    <string name="taskbar_open_settings">运行中的应用 / 设置</string>
     <string name="dream_name">时钟</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN 已关闭</string>

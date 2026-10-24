@@ -73,6 +73,11 @@
     <string name="stats_storage">Volné místo %1$s</string>
     <string name="storage_gb_whole">%1$.0f GB</string>
     <string name="storage_gb_decimal">%1$.1f GB</string>
+    <string name="taskbar_title">Systém</string>
+    <string name="taskbar_memory">Paměť (RAM)</string>
+    <string name="taskbar_cpu">Využití procesoru</string>
+    <string name="taskbar_storage">Úložiště</string>
+    <string name="taskbar_open_settings">Běžící aplikace / Nastavení</string>
     <string name="quick_picture">Obraz</string>
     <string name="quick_network">Síť</string>
     <string name="quick_apps">Aplikace</string>

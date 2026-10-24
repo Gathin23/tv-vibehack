@@ -21,6 +21,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">Memòria %1$d / %2$d MB</string>
     <string name="stats_storage">Emmagatzematge %1$s lliure</string>
+    <string name="taskbar_title">Sistema</string>
+    <string name="taskbar_memory">Memòria (RAM)</string>
+    <string name="taskbar_cpu">Ús de CPU</string>
+    <string name="taskbar_storage">Emmagatzematge</string>
+    <string name="taskbar_open_settings">Aplicacions en execució / Paràmetres</string>
     <string name="dream_name">Rellotge</string>
     <string name="launcher_settings">Configuració del llançador</string>
     <string name="native_settings">Configuració del fabricant</string>

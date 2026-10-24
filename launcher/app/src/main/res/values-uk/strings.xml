@@ -39,6 +39,11 @@
     <string name="stats_storage">Сховище: %1$s вільно</string>
     <string name="storage_gb_whole">%1$.0f ГБ</string>
     <string name="storage_gb_decimal">%1$.1f ГБ</string>
+    <string name="taskbar_title">Система</string>
+    <string name="taskbar_memory">Пам’ять (ОЗП)</string>
+    <string name="taskbar_cpu">Використання ЦП</string>
+    <string name="taskbar_storage">Сховище</string>
+    <string name="taskbar_open_settings">Запущені програми / Налаштування</string>
     <string name="dream_name">Годинник</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN вимкнено</string>

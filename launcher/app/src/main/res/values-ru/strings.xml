@@ -39,6 +39,11 @@
     <string name="stats_storage">Накопитель %1$s свободно</string>
     <string name="storage_gb_whole">%1$.0f ГБ</string>
     <string name="storage_gb_decimal">%1$.1f ГБ</string>
+    <string name="taskbar_title">Система</string>
+    <string name="taskbar_memory">Память (ОЗУ)</string>
+    <string name="taskbar_cpu">Загрузка ЦП</string>
+    <string name="taskbar_storage">Память устройства</string>
+    <string name="taskbar_open_settings">Запущенные приложения / Настройки</string>
     <string name="dream_name">Часы</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN отключён</string>

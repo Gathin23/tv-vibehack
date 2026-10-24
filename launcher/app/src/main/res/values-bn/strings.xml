@@ -23,6 +23,11 @@
     <string name="stats_cpu">সিপিইউ %1$d%%</string>
     <string name="stats_memory">মেমরি %1$d / %2$d MB</string>
     <string name="stats_storage">স্টোরেজ %1$s খালি</string>
+    <string name="taskbar_title">সিস্টেম</string>
+    <string name="taskbar_memory">মেমরি (RAM)</string>
+    <string name="taskbar_cpu">CPU ব্যবহার</string>
+    <string name="taskbar_storage">স্টোরেজ</string>
+    <string name="taskbar_open_settings">চলমান অ্যাপ / সেটিংস</string>
     <string name="dream_name">ঘড়ি</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN বন্ধ</string>

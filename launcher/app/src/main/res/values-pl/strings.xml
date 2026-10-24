@@ -22,6 +22,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">Pamięć %1$d / %2$d MB</string>
     <string name="stats_storage">Miejsce %1$s wolne</string>
+    <string name="taskbar_title">System</string>
+    <string name="taskbar_memory">Pamięć (RAM)</string>
+    <string name="taskbar_cpu">Użycie procesora</string>
+    <string name="taskbar_storage">Pamięć masowa</string>
+    <string name="taskbar_open_settings">Uruchomione aplikacje / Ustawienia</string>
     <string name="dream_name">Zegar</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN wyłączony</string>

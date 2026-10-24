@@ -22,6 +22,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">หน่วยความจำ %1$d / %2$d MB</string>
     <string name="stats_storage">พื้นที่ว่าง %1$s</string>
+    <string name="taskbar_title">ระบบ</string>
+    <string name="taskbar_memory">หน่วยความจำ (RAM)</string>
+    <string name="taskbar_cpu">การใช้งาน CPU</string>
+    <string name="taskbar_storage">ที่จัดเก็บข้อมูล</string>
+    <string name="taskbar_open_settings">แอปที่ทำงานอยู่ / การตั้งค่า</string>
     <string name="dream_name">นาฬิกา</string>
 
     <string name="launcher_settings">การตั้งค่าหน้าหลัก</string>

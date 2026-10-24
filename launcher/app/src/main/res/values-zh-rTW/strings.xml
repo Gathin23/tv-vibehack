@@ -22,6 +22,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">記憶體 %1$d / %2$d MB</string>
     <string name="stats_storage">儲存空間剩餘 %1$s</string>
+    <string name="taskbar_title">系統</string>
+    <string name="taskbar_memory">記憶體 (RAM)</string>
+    <string name="taskbar_cpu">CPU 使用率</string>
+    <string name="taskbar_storage">儲存空間</string>
+    <string name="taskbar_open_settings">執行中的應用程式 / 設定</string>
     <string name="dream_name">時鐘</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN 未開啟</string>

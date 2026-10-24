@@ -23,6 +23,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">Memoria %1$d / %2$d MB</string>
     <string name="stats_storage">Almacenamiento %1$s libre</string>
+    <string name="taskbar_title">Sistema</string>
+    <string name="taskbar_memory">Memoria (RAM)</string>
+    <string name="taskbar_cpu">Uso de CPU</string>
+    <string name="taskbar_storage">Almacenamiento</string>
+    <string name="taskbar_open_settings">Aplicaciones activas / Ajustes</string>
     <string name="dream_name">Reloj</string>
     <string name="launcher_settings">Ajustes del lanzador</string>
     <string name="native_settings">Ajustes del fabricante</string>

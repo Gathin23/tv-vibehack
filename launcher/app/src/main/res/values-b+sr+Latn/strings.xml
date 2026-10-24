@@ -22,6 +22,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">Memorija %1$d / %2$d MB</string>
     <string name="stats_storage">Skladište %1$s slobodno</string>
+    <string name="taskbar_title">Sistem</string>
+    <string name="taskbar_memory">Memorija (RAM)</string>
+    <string name="taskbar_cpu">Zauzeće procesora</string>
+    <string name="taskbar_storage">Skladište</string>
+    <string name="taskbar_open_settings">Pokrenute aplikacije / Podešavanja</string>
     <string name="dream_name">Sat</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN isključen</string>

@@ -18,6 +18,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">Memoria: %1$d / %2$d MB</string>
     <string name="stats_storage">Spazio: %1$s liberi</string>
+    <string name="taskbar_title">Sistema</string>
+    <string name="taskbar_memory">Memoria (RAM)</string>
+    <string name="taskbar_cpu">Utilizzo CPU</string>
+    <string name="taskbar_storage">Memoria</string>
+    <string name="taskbar_open_settings">App in esecuzione / Impostazioni</string>
     <string name="dream_name">Orologio</string>
     <string name="vpn_off">VPN disattivata</string>
     <string name="home_settings">Scegli la home predefinita</string>

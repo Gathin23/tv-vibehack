@@ -38,6 +38,11 @@
     <string name="stats_storage">אחסון %1$s פנוי</string>
     <string name="storage_gb_whole">%1$.0f GB</string>
     <string name="storage_gb_decimal">%1$.1f GB</string>
+    <string name="taskbar_title">מערכת</string>
+    <string name="taskbar_memory">זיכרון (RAM)</string>
+    <string name="taskbar_cpu">שימוש במעבד</string>
+    <string name="taskbar_storage">אחסון</string>
+    <string name="taskbar_open_settings">יישומים פועלים / הגדרות</string>
     <string name="dream_name">שעון</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">ה־VPN כבוי</string>

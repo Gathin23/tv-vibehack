@@ -24,6 +24,11 @@
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">Speicher %1$d / %2$d MB</string>
     <string name="stats_storage">Speicherplatz %1$s frei</string>
+    <string name="taskbar_title">System</string>
+    <string name="taskbar_memory">Speicher (RAM)</string>
+    <string name="taskbar_cpu">CPU-Auslastung</string>
+    <string name="taskbar_storage">Speicherplatz</string>
+    <string name="taskbar_open_settings">Laufende Apps / Einstellungen</string>
     <string name="dream_name">Uhr</string>
     <string name="input_key_service_description">Öffnet die Quellenauswahl, wenn die Input-Taste der Fernbedienung gedrückt wird.</string>
     <string name="launcher_settings">Launcher-Einstellungen</string>

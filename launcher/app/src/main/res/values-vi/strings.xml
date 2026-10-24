@@ -79,6 +79,11 @@
     <string name="festival_diwali_greeting">Chúc mừng lễ Diwali</string>
     <string name="stats_memory">Bộ nhớ %1$d / %2$d MB</string>
     <string name="stats_storage">Còn trống %1$s</string>
+    <string name="taskbar_title">Hệ thống</string>
+    <string name="taskbar_memory">Bộ nhớ (RAM)</string>
+    <string name="taskbar_cpu">Sử dụng CPU</string>
+    <string name="taskbar_storage">Bộ nhớ lưu trữ</string>
+    <string name="taskbar_open_settings">Ứng dụng đang chạy / Cài đặt</string>
     <string name="rows_below_dock_label">Số hàng dưới dock</string>
     <string name="wallpaper_label">Hình nền</string>
     <string name="wallpaper_state">Hình nền: %1$s</string>
