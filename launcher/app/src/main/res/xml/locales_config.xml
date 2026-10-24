@@ -20,6 +20,8 @@
     <locale android:name="iw" />
     <locale android:name="tr" />
     <locale android:name="pt" />
+    <!-- values-pt is Brazilian Portuguese; values-pt-rPT holds the European wording where it differs. -->
+    <locale android:name="pt-PT" />
     <locale android:name="fi" />
     <locale android:name="vi" />
     <locale android:name="bn" />

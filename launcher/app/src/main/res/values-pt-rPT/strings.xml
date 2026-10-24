@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- European Portuguese: only the strings that differ from values-pt, which is Brazilian Portuguese.
+     Everything not listed here falls back to values-pt. -->
+<resources>
+    <string name="dock_edit">Editar a dock</string>
+    <string name="dock_edit_hint">Escolha o lugar da dock a mudar e prima OK. Voltar para terminar.</string>
+    <string name="dock_edit_pick_app">Agora escolha a app a colocar lá e prima OK. Voltar para escolher outro lugar.</string>
+    <string name="tile_add_to_dock">Adicionar à dock</string>
+    <string name="tile_replace_in_dock">Substituir por outra app</string>
+    <string name="dock_edit_pick_place">Escolha o lugar da dock para esta app e prima OK. Voltar para cancelar.</string>
+</resources>
