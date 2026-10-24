@@ -2,5 +2,5 @@
   "tv": "Xiaomi Mi Box S (MIBOX4, oneday), streaming box",
   "os": "Android TV 9",
   "brand": "Xiaomi",
-  "notes": "PatchWall, Mi analytics, Alphonso ad tracking, MiLink; voice, casting, phone remote off by choice; second unit: Apps button opens Home with HomeKeyService; [notes](../docs/devices/xiaomi-mi-box-s.md)"
+  "notes": "PatchWall, Mi analytics, Alphonso ad tracking, MiLink; voice, casting, phone remote off by choice; second unit: Apps button opens Home with HomeKeyService; fourth unit: LumiFlow device theme, casting and voice kept; [notes](../docs/devices/xiaomi-mi-box-s.md)"
 }

@@ -1,0 +1,18 @@
+{
+  "dock_apps": [
+    "com.google.android.youtube.tv",
+    "com.netflix.ninja",
+    "in.startv.hotstar",
+    "com.graymatrix.did"
+  ],
+  "live_tv_package": "",
+  "wallpaper": true,
+  "wallpaper_rotation_minutes": 1,
+  "wallpaper_order": "shuffle",
+  "wallpaper_dim": 0,
+  "dock_glass": true,
+  "dock_opacity": 75,
+  "app_library": true,
+  "reduced_motion": true,
+  "show_stats": true
+}

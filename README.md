@@ -98,6 +98,10 @@ phoning home, no apps you never asked for.
 | *Aurora theme, pushed with `tools/theme.sh`* | *Six columns and a six-app dock, same launcher* |
 | ![Moving a tile: held OK, chose Move, the tile is picked up and the others dim](docs/tile-move.jpg) | ![The App library: installed apps, one press adds an app back to Home](docs/app-library.jpg) |
 | *With `tile_menu`, hold OK on a tile, Move: arrows carry it, Back puts it down* | *App library: one press puts a removed app back on Home* |
+| ![A Xiaomi Mi Box S: the LumiFlow device theme with a glass dock, a stats line and a darkened photo](docs/devices/xiaomi-mi-box-s-lumiflow.jpg) | ![The next photo in the rotation: a monastery](docs/devices/xiaomi-mi-box-s-lumiflow-monastery.jpg) |
+| *Mi Box S (2 GB): the LumiFlow [device theme](examples/xiaomi-mi-box-s/theme/README.md), photos shuffled every minute* | *The next photo, same theme, [notes](docs/devices/xiaomi-mi-box-s.md)* |
+| ![The LumiFlow theme with a rider on a lake road behind the dock](docs/devices/xiaomi-mi-box-s-lumiflow-rider.jpg) | ![The same Mi Box S Home with no wallpaper](docs/devices/xiaomi-mi-box-s-plain-home.jpg) |
+| *Another photo in the rotation* | *The same Home with no wallpaper* |
 
 ## Supported TVs
 
