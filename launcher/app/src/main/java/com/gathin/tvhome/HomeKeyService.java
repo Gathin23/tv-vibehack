@@ -34,6 +34,9 @@ import java.util.Set;
  * that launcher on again after it was disabled (XGIMI's xrmservice does, on its own remote keys), or that cannot be
  * disabled at all, and a short press of Home opens this launcher even when the stock home is already on screen.
  *
+ * With boot_app_redirect set, it sends the app the firmware opens at power-on (the OnePlus Y1's Live TV) back here,
+ * once per boot, when that app is the first thing on screen.
+ *
  * Enable over adb:
  *   settings put secure enabled_accessibility_services com.gathin.tvhome/.HomeKeyService
  *   settings put secure accessibility_enabled 1
@@ -58,6 +61,10 @@ public class HomeKeyService extends AccessibilityService {
     private BroadcastReceiver unlockReceiver;
     /** The stock launcher's HOME activities (stock_home_redirect), disabled ones included. */
     private final Set<String> stockHome = new HashSet<>();
+    /** boot_app_redirect while it is armed for this boot; null when it is off or has decided. */
+    private String bootApp, bootActivity;
+    /** elapsedRealtime when boot_app_redirect was armed. */
+    private long bootArmedAt;
     /** Stops key filtering while a game controller is connected; null unless gamepad_passthrough and key_filter, or before the unlock. */
     private GamepadPassthrough gamepads;
 
@@ -122,13 +129,33 @@ public class HomeKeyService extends AccessibilityService {
                 stockHome.add(ri.activityInfo.name);
             }
         }
-        // home_key_service.xml subscribes to no events, so the redirect asks for window changes only when it is on.
+        // boot_app_redirect: armed at the first bind of a boot only, so a rebind (theme.sh) never re-arms it. The boot
+        // app itself, Home on screen, BOOT_APP_ARM_MS or (with key_filter on) a key then ends it, and the window
+        // events it asked for stop.
+        bootApp = null;
+        android.content.ComponentName boot = config.bootAppRedirect.isEmpty()
+                ? null : android.content.ComponentName.unflattenFromString(config.bootAppRedirect);
+        if (boot != null) {
+            int count = Settings.Global.getInt(getContentResolver(), Settings.Global.BOOT_COUNT, -1);
+            SharedPreferences prefs = getSharedPreferences("boot", MODE_PRIVATE);
+            long now = SystemClock.elapsedRealtime();
+            if (firstBindAfterBoot(count, prefs.getInt("boot_app_boot", -1), now)) {
+                // commit, not apply: if the launcher is killed in the first minutes of a boot, a lost record would
+                // re-arm the redirect at the next bind and could send a Live TV or HDMI window the owner chose Home.
+                prefs.edit().putInt("boot_app_boot", count).commit();
+                bootApp = boot.getPackageName();
+                bootActivity = boot.getClassName();
+                bootArmedAt = now;
+            }
+        }
+        // home_key_service.xml subscribes to no events, so a redirect asks for window changes only when it is on.
+        boolean watch = !stockHome.isEmpty() || bootApp != null;
         AccessibilityServiceInfo info = getServiceInfo();
-        if (info != null && !stockHome.isEmpty()) {
+        if (info != null && watch) {
             info.eventTypes |= AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
             setServiceInfo(info);
         }
-        if (!stockHome.isEmpty()) probeAtBoot();
+        if (watch) probeAtBoot();
         holdAppKeys = RemoteKeys.parseHoldAppKeys(config.appKeys);
         holdAppScancodes = RemoteKeys.parseHoldAppScancodes(config.appKeys);
         // gamepad_passthrough, off by default. Only with key_filter on: off, the service never filters keys.
@@ -147,6 +174,8 @@ public class HomeKeyService extends AccessibilityService {
 
     @Override
     protected boolean onKeyEvent(KeyEvent event) {
+        // boot_app_redirect: after a key from the remote, whatever opens next is the user's choice.
+        disarmBootApp();
         if (consumeVolumeKeys && VolumeKeys.handle(this, event)) return true;
         // A scancode entry is more specific than any keycode, so it goes first.
         if (RemoteKeys.handle(this, event, appScancodes.get(event.getScanCode()),
@@ -190,19 +219,61 @@ public class HomeKeyService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        // stock_home_redirect: the firmware turned the stock launcher back on and its home screen came up.
-        if (stockHome.isEmpty() || event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return;
+        if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return;
         CharSequence cls = event.getClassName();
+        if (bootApp != null) {
+            long now = SystemClock.elapsedRealtime();
+            int verdict = bootVerdict(bootApp, bootActivity, MainActivity.class.getName(), event.getPackageName(), cls,
+                    now, now - bootArmedAt);
+            if (verdict != BOOT_WAIT) disarmBootApp();
+            if (verdict == BOOT_REDIRECT) {
+                handler.postDelayed(this::openHome, HOME_KEY_DELAY_MS);
+                return;
+            }
+        }
+        // stock_home_redirect: the firmware turned the stock launcher back on and its home screen came up.
         if (cls != null && stockHome.contains(cls.toString())) openHome();
     }
 
-    /** How long after boot the first bind still counts as "at boot" for probeAtBoot. */
+    /** boot_app_redirect: what a window that comes up while it is armed means. */
+    static final int BOOT_WAIT = 0, BOOT_REDIRECT = 1, BOOT_DISARM = 2;
+    /** How long boot_app_redirect stays armed. The firmware starts its app at the same unlock that arms it, and the
+     *  probe makes the window in front report within a second, so this is margin, not a wait. Without key filtering
+     *  no key can disarm it, so it must not stay armed for long. */
+    static final long BOOT_APP_ARM_MS = 30_000L;
+
+    /** The boot app decides a redirect; this launcher's home screen first means the TV booted to Home, so a later
+     *  Live TV or HDMI window is the user's. Anything else (ProbeActivity, a toast, another window of the same app)
+     *  waits. After BOOT_APP_ARM_MS from arming, or past the boot window, it is over either way. */
+    static int bootVerdict(String app, String activity, String home, CharSequence pkg, CharSequence cls, long uptimeMs,
+                           long sinceArmedMs) {
+        if (uptimeMs >= BOOT_WINDOW_MS || sinceArmedMs >= BOOT_APP_ARM_MS) return BOOT_DISARM;
+        if (pkg == null || cls == null) return BOOT_WAIT;
+        if (app.contentEquals(pkg) && activity.contentEquals(cls)) return BOOT_REDIRECT;
+        if (home.contentEquals(cls)) return BOOT_DISARM;
+        return BOOT_WAIT;
+    }
+
+    /** boot_app_redirect has decided for this boot: drop the window events it asked for, unless stock_home_redirect
+     *  still needs them (home_key_service.xml subscribes to none, so no window change reaches the launcher). */
+    private void disarmBootApp() {
+        if (bootApp == null) return;
+        bootApp = null;
+        if (!stockHome.isEmpty()) return;
+        AccessibilityServiceInfo info = getServiceInfo();
+        if (info == null) return;
+        info.eventTypes &= ~AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+        setServiceInfo(info);
+    }
+
+    /** How long after boot the first bind still counts as "at boot", for probeAtBoot and for arming boot_app_redirect. */
     static final long BOOT_WINDOW_MS = 3 * 60 * 1000L;
 
-    /** stock_home_redirect at boot: the stock home is often on screen before Android binds this service, so no
-     *  window event for it arrives (#1116). Once per boot, open ProbeActivity: when it closes, whatever was in
-     *  front comes back and sends a window event, and onAccessibilityEvent covers it only if it is the stock home.
-     *  An HDMI input or an app that the TV resumed at boot is left alone. */
+    /** At boot, for stock_home_redirect and boot_app_redirect: the window in front is often there before Android
+     *  binds this service, so no window event for it arrives (#1116). Once per boot, open ProbeActivity: when it
+     *  closes, whatever was in front comes back and sends a window event, and onAccessibilityEvent acts on it only if
+     *  it is the stock home or the armed boot_app_redirect activity (whatever input that activity shows, HDMI
+     *  included). Any other app or input the TV resumed at boot is left alone. */
     private void probeAtBoot() {
         int boot = Settings.Global.getInt(getContentResolver(), Settings.Global.BOOT_COUNT, -1);
         SharedPreferences prefs = getSharedPreferences("boot", MODE_PRIVATE);

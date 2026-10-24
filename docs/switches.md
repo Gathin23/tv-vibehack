@@ -45,3 +45,4 @@ fits the rules; keys from before the rule sit on its wanted list until a screens
 | `dock_band_all` | <img src="switches/single_row.jpg" width="320" alt="dock_band_all on a TV"> |
 | `uniform_tiles` | <img src="switches/uniform_tiles.jpg" width="320" alt="uniform_tiles on a TV"> |
 | `lunar_date` | <img src="switches/lunar_date.jpg" width="320" alt="lunar_date on a TV"> |
+| `boot_app_redirect` | <img src="switches/boot_app_redirect.jpg" width="320" alt="boot_app_redirect on a TV"> |

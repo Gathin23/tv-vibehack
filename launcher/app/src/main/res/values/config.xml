@@ -197,6 +197,15 @@
          straight back here. A theme's config.json can set it too. Leave empty to omit. -->
     <string name="stock_home_redirect" translatable="false"></string>
 
+    <!-- An app the firmware puts in front at power-on, as "package/activity", that should not stay there. A OnePlus
+         Y1 (Skyworth/MediaTek, Android TV 11) opens its Live TV app at every cold boot, scan prompt and all, and no
+         setting turns that off: com.mediatek.wwtv.tvcenter/.nav.TurnkeyUiMainActivity. Once per boot, for 30 s after
+         HomeKeyService (HOME_KEY_SERVICE=1) starts, the first time that activity comes up the TV is sent back here,
+         unless Home was on screen first or, with key_filter on, a remote key was pressed first. Other windows in
+         between do not cancel it. After that, the same Live TV or HDMI window is left alone. A theme's config.json
+         can set it too. Leave empty to omit. -->
+    <string name="boot_app_redirect" translatable="false"></string>
+
     <!-- Show the Solar Hijri (Shamsi) date used in Iran and Afghanistan, e.g. "27 Mehr 1405", above the
          Gregorian date. -->
     <bool name="shamsi_date">false</bool>
