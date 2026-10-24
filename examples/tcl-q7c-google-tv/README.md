@@ -7,7 +7,7 @@ Clean Your TV launcher as Home.
 
 | File | What it is |
 |---|---|
-| `debloat.txt` | The 37 packages that were disabled, grouped and commented |
+| `debloat.txt` | The 63 packages that were disabled, grouped and commented |
 | `config.json` | Dock, hidden TCL tiles, Live TV app, the Settings and YouTube buttons; push it with `tools/theme.sh` |
 | `65q7d-pro-home.png` | Home on the second unit, a TCL 65Q7D Pro (see [Second unit](#second-unit-65q7d-pro-greece-wi-fi)) |
 
@@ -382,3 +382,28 @@ was added to `debloat.txt` beyond a header line naming this unit; the deltas are
   advertised `_adb._tcp`. Switching USB debugging off and rebooting closed it (`tools/adb-closed.py`).
 - **Checked with the real remote:** Home, the app buttons, Input, Settings and holding volume all worked with the
   new launcher and no key helpers enabled.
+
+## Fifth unit: G08 EU/UK, OTA from Android 12
+
+TCL Smart TV Pro, product `G08_4K_GB`, firmware `UTT2.250416.001 AU02`, EU/UK unit on Ethernet with a custom
+launcher (launcherx and setupwraith off). This set is the source of the groups marked "fifth unit" in
+`debloat.txt`; it OTA'd from Android 12 (the Android 12 list of this exact set, PR #657) to Android 14 on
+21 October 2026, and its Android 12 debloat entries were audited against the OTA.
+
+- **OTA survival:** no disabled package came back from the update. The OTA newly installed `com.tcl.channelplus`
+  (in the list) — re-run `tools/disable.sh` after every update, it will pick up the new packages on the list.
+- `com.iplayer.android.webview` from the Android 12 firmware is gone from this build.
+- **Source key / QuickPanel:** the remote Source key is keycode 178 (`KEYCODE_TV_INPUT`). With launcherx gone,
+  `com.tcl.suspension` draws the source QuickPanel itself (`input keyevent 178` → `QuickPanelDialog` in logcat,
+  confirmed with the real remote). The DO-NOT-DISABLE set for this: `com.tcl.autopair`, `com.tcl.suspension`,
+  `com.tcl.interactive`, `com.tcl.ttvs` — disabling them shows the known ~10 Hz NPE storm in logcat.
+- **`com.tcl.ttvs` is not analytics-only:** on a related AU04 G08 unit, `dumpsys package com.tcl.ttvs` lists
+  firmware-update components (`versionUpdateApp` `SystemUpdateActivity`, `NetworkUpdateActivity`,
+  `SystemUpdateReceiver`, package `10.60.15_422bf21_260617_overseaTV`) — check the package before treating it
+  as telemetry. (Report from PR #1085's unit; left enabled there.)
+- **Kept enabled:** the TCL keyboard `com.tcl.inputmethod.international` and `com.tcl.browser` — the browser is
+  what the remote's Web key opens on this firmware. Verified on the set: boot, Live TV/HDMI playback, the Source
+  key panel, streaming preloads and the Google stack.
+- **Never list** `com.google.android.modulemetadata` and the `com.google.android.overlay.modules.*` overlays
+  (permissioncontroller, modulemetadata-forframework): `tools/disable.sh` refuses a list that names them
+  (brick class, #884). The Android 12 EU list named them before the tool gate existed; they are excluded here.

@@ -16,6 +16,10 @@
 # its credentials; Home goes to the new launcher through stock_home_redirect instead. Survived two reboots. See README.
 # Fourth unit: TCL 65T8C, same build (AU02), on Wi-Fi, from 23 October 2026: AirPlay, Prime Video and mediashell kept,
 # more TCL extras and the TCL keyboard off (Gboard set first); Wireless debugging only. See README.
+# Fifth unit: TCL G08 EU/UK set, OTA from Android 12 (fingerprint UTT2.250416.001 AU02, 21 October 2026): the groups
+# marked "fifth unit" below were verified disabled there. OTA-survival audit: the update re-enabled none of this list
+# and newly installed com.tcl.channelplus (in the list); com.iplayer.android.webview from the Android 12 days is gone
+# from this firmware. See README.
 #
 # Apply:   FORCE_SETUPWRAITH=1 TV_HOST=<tv ip> tools/disable.sh examples/tcl-q7c-google-tv/debloat.txt
 #          FORCE_SETUPWRAITH=1 only on Ethernet with no saved Wi-Fi: disable.sh otherwise skips setupwraith because
@@ -81,6 +85,52 @@ com.netflix.tokenmanager
 com.amazon.amazonvideo.livingroom      # Prime Video
 com.google.android.videos              # Google TV / Play Movies storefront
 com.google.android.play.games
+
+# Android 14 system packages, verified on the fifth unit (EU/UK, OTA from Android 12)
+com.android.backupconfirm                # Android's own backup agent
+com.android.dynsystem                    # dynamic system; live devices only.
+com.android.pacprocessor                 # PAC proxy autoconfig
+com.android.se
+com.android.htmlviewer
+com.android.localtransport               # carrier service transport
+com.android.proxyhandler
+com.android.sharedstoragebackup
+com.android.statementservice             # Digital Asset Links verification
+com.android.wallpaperbackup
+com.android.captiveportallogin           # portal login app for open Wi-Fi
+com.android.hotspot2.osulogin            # Passpoint sign-in UI
+com.android.companiondevicemanager       # companion-device pairing
+android.autoinstalls.config.google.gtvpai # Play Auto Inflation auto-install rules
+com.google.android.tts                   # text-to-speech, off by choice (voice TTS screens need it)
+com.google.android.apps.tv.dreamx        # photo screensaver, off by choice on the EU set
+
+# Google mainline overlays (RROs), verified on the fifth unit. Never add the com.google.android.overlay.modules.*
+# overlays, com.google.android.modulemetadata, com.google.android.overlay.modules.permissioncontroller or
+# com.google.android.overlay.modules.modulemetadata.forframework - disable.sh refuses them (brick class, #884).
+com.google.android.overlay.googlewebview
+com.google.android.overlay.gtvsconfigx
+com.google.android.overlay.gtvssettingsprovider
+
+# Contacts/calendar provider stack, present on the EU builds (fifth unit)
+com.android.providers.calendar
+com.android.providers.contacts
+com.android.providers.userdictionary
+
+# TCL/MediaTek webview providers; the system webview is com.google.android.webview, not these (fifth unit)
+com.tcl.android.webview
+com.mediatek.support.webview
+
+# MediaTek extras (fifth unit)
+com.mediatek.network
+com.mediatek.backgrounddetection
+
+# Disabled on the fifth unit, kept enabled on the Google TV home units - keep these lines commented out:
+# com.tcl.dashboard                       # TCL dashboard; gear-button app on the stock home
+# com.tcl.gamebar                         # game bar
+# com.tcl.eva                             # boot service with camera and TCL BI permissions, purpose unclear
+# com.tcl.factory.view                    # the factory app - the repo says never launch it
+# com.tcl.browser                         # the remote's Web-key target on this firmware - keep
+# com.tcl.inputmethod.international       # the default keyboard - keep (4th unit: off only with Gboard set first)
 
 # Stock launcher, off once the new launcher is Home
 com.google.android.apps.tv.launcherx
