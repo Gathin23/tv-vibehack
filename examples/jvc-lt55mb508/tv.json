@@ -1,0 +1,6 @@
+{
+  "tv": "JVC LT55MB508 (MTC, seocho, MediaTek MSD6886), Brazil",
+  "os": "Android TV 11",
+  "brand": "JVC",
+  "notes": "Anoki ACR, JVC auto-installs, Google recommendation rows and feedback; same MTC platform as the [Hitachi](hitachi-65qledsm20/), the \"demo\" package handles the Input key and remote pairing; Assistant (stock home search goes with it), Chromecast, Ambient and USB player off by choice; tvlauncher has HOME priority 2 and must be disabled for the launcher; 1.3 GB"
+}

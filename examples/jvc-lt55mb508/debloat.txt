@@ -1,0 +1,83 @@
+# JVC LT55MB508 (built by MTC, MTCMSD6886SA, codename seocho, MediaTek MSD6886), Android TV 11 (API 30),
+# firmware RTO8.250904.001 (built 2025-09-05), security patch 2025-07-01, 1.3 GB RAM, 1920x1080 UI. Brazilian unit.
+# Shipped with Android TV 9 (first_api_level 28) and was updated over the air to 11.
+# Fingerprint: JVC/MTCMSD6886SA/seocho:11/RTO8.250904.001/14050644:user/release-keys
+# Same MTC platform as examples/hitachi-65qledsm20: Anoki ACR, JVC auto-installs, MtcRetailDisplay.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/jvc-lt55mb508/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/jvc-lt55mb508/debloat.txt
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Status: applied in six batches with screenshots between them on 2026-10-19/20, reboot-checked, then in daily
+# family use with the reference launcher as Home (built from 42288ae) until 2026-10-24 with nothing re-enabled.
+#
+# Debloat and launcher both work. Stock launcher: com.google.android.tvlauncher (the scripts' default).
+# HOME is claimed only by tvlauncher (priority 2) and com.android.tv.settings/.system.FallbackHome; setupwraith
+# does not claim HOME on this build. `set-home-activity` prints Success but Home stays on tvlauncher until it
+# is disabled, which launcher/build-and-install.sh does; Home then resolves to com.gathin.tvhome and survives
+# a reboot. Home, Input and the settings button on the physical remote work with no accessibility helper.
+# Live TV: com.mediatek.wwtv.tvcenter. TV inputs (com.mediatek.tvinput): HDMI 1-4 = HW4-HW7, AV = HW1,
+# tuners = HW0, HW8.
+#
+# KEEP, even though the names look like bloat:
+# - fusion.android.tv.demo ("MtcRetailDisplay"): handles the remote's Input button (TV_INPUT_BUTTON,
+#   CONNECT_INPUT) and Bluetooth remote pairing (mtc.bluetooth.AddAccessoryActivity).
+# - com.google.android.leanbacklauncher.partnercustomizer (MtcTvLauncherCustomizer): configures the stock home.
+# - com.airoha.btd: the remote's Bluetooth chip tool; shows up in the app list with a cloud/remote icon.
+# - mediatek.factorymenu.ui (factory menu, retail-mode listener), com.mediatek.tv.factorykey (binds as a TV
+#   input), com.mediatek.mtc.factory, com.mediatek.testpq, com.mediatek.network, every com.mediatek.* package.
+# - com.google.android.tv.remote.service: phone remote and its IME bridge.
+# - There is no separate firmware-update or Miracast package. Firmware updates come through Google Play
+#   services (com.google.android.gms/.update.SystemUpdatePanoActivity), so they keep working.
+# - com.cltv.fast (Anoki FAST channels) and TalkBack ship disabled from the factory.
+#
+# Notes from this TV (all batches verified with screenshots, a reboot and YouTube playback):
+# - The stock adb binary connects on Windows; port 5555 opens with USB debugging alone.
+# - If you keep the stock home: disabling tvrecommendations removes its notifications icon, the "Sponsored" hero
+#   and "Sponsored by ..." rows stay (Google serves them to tvlauncher itself), and the Apps tab keeps a
+#   "Google Play Movies & TV" promo tile after com.google.android.videos is gone.
+# - Screenshots come out black on Live TV, HDMI and DRM video. The Input key opens tvcenter's
+#   TurnkeyUiMainActivity, which switches to the TV source after a few seconds. The launcher's Inputs menu
+#   lists HDMI 1-4, Composite and Live TV.
+# - After a reboot com.mediatek.tv.service logs "Failed to find provider info for tv.anoki.acr.controller.support"
+#   twice and carries on (same PID afterwards), as on the Hitachi.
+# - Used RAM 150 s after boot: 938 MB stock, 820 MB with every line below disabled, 703 MB with the launcher
+#   as Home (free RAM 474 -> 561 -> 657 MB). Before, TED, Spotify, tvrecommendations and Google TV were
+#   running in the background after boot (about 150 MB resident); none of them starts any more.
+# - /data is only 4.3 GB and was 86% full with a few streaming apps. Disabling frees no storage.
+# - Removing an updated system app's Play Store update (`pm uninstall <package>` without --user) re-enabled it
+#   on this firmware; disable it again afterwards.
+
+# Batch 1: telemetry
+tv.anoki.acr.controller                 # Anoki automatic content recognition (boot receiver, opt-in activity)
+com.google.android.partnersetup         # Google partner RLZ tracking pings
+com.google.android.feedback
+
+# Batch 2: auto-installs and background services
+android.autoinstalls.config.JVC         # Play Auto Install config: partner apps pushed after setup
+com.google.android.syncadapters.calendar
+
+# Batch 3: recommendation rows and notifications panel (test alone, closest to the stock launcher)
+com.google.android.tvrecommendations
+
+# Batch 4: personal choice, comment out what you use
+# Preloaded system apps
+com.google.android.youtube.tvmusic
+com.google.android.play.games
+# Not system apps: pushed through the Play Store by the auto-install config above after setup
+com.google.android.videos               # Google TV / Play Movies
+com.spotify.tv.android
+com.ted.android.tv
+com.foxnews.android                     # also adds a live channel input
+br.tv.horizonte.android.premierefc      # Premiere FC
+
+# Batch 5: personal choice, voice and features
+com.google.android.katniss              # Assistant: the stock home's search stops working, voice AND keyboard
+com.google.android.apps.mediashell      # Chromecast built-in
+com.google.android.backdrop             # Ambient screensaver; set another one first: com.gathin.tvhome/.ClockDream
+                                        # or com.android.dreams.basic/.Colors (secure screensaver_components)
+com.mediatek.wwtv.mediaplayer           # MMP: the TV's USB and DLNA media player
+
+# Stock launcher, replaced by launcher/. Left to launcher/build-and-install.sh, which disables it only after the
+# new home is installed and started; restore.sh re-enables it.
+# com.google.android.tvlauncher
